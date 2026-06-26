@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-stone-50 text-stone-900;
+  }
+}
+
+@layer components {
+  .step-indicator {
+    @apply flex items-center gap-2;
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-stone-200 shadow-sm;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-md hover:border-stone-300 transition-all duration-200;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@layer utilities {
+  .print-only {
+    display: none;
+  }
+}
+
+/* Print styles for calendar export */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  header, .step-indicator, .step-navigation, button,
+  .print-hide, [role="navigation"] {
+    display: none !important;
+  }
+
+  .card {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .overflow-x-auto {
+    overflow: visible !important;
+  }
+
+  table {
+    font-size: 10px !important;
+  }
+
+  th, td {
+    padding: 4px 8px !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+}
