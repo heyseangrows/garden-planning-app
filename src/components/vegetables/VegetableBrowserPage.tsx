@@ -9,6 +9,7 @@ import { VegetableCard } from './VegetableCard';
 import { FilterBar } from './FilterBar';
 import { SearchBar } from './SearchBar';
 import { MonthFilter } from './MonthFilter';
+import { RatingFilters } from './RatingFilter';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { computeVarietyMonthSets, type MonthFilterActivity } from '@/utils/vegetables/monthFilterUtils';
 
@@ -45,8 +46,13 @@ function mergeCustomGroups(
   groups: VegetableGroup[],
   customVarieties: VegetableGroup['varieties'],
 ): VegetableGroup[] {
-  // Sort alphabetically by name
-  const sorted = [...groups].sort((a, b) => a.name.localeCompare(b.name));
+  // Sort varieties within each group alphabetically by name, then sort groups
+  const sorted = [...groups]
+    .map((g) => ({
+      ...g,
+      varieties: [...g.varieties].sort((a, b) => a.name.localeCompare(b.name)),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
   if (customVarieties.length === 0) return sorted;
   const customGroup: VegetableGroup = {
     id: 'custom',
@@ -95,6 +101,9 @@ export function VegetableBrowserPage() {
   const [editingVarietyId, setEditingVarietyId] = useState<string | null>(null);
   const [selectedActivities, setSelectedActivities] = useState<MonthFilterActivity[]>(['sow', 'plantOut', 'harvest']);
   const [selectedMonths, setSelectedMonths] = useState<number[]>([]);
+  const [minClimate, setMinClimate] = useState(0);
+  const [minYield, setMinYield] = useState(0);
+  const [minTaste, setMinTaste] = useState(0);
 
   const handleToggleActivity = (activity: MonthFilterActivity) => {
     setSelectedActivities((prev) =>
@@ -266,8 +275,22 @@ export function VegetableBrowserPage() {
         }))
         .filter((g) => g.varieties.length > 0);
     }
+    // Rating filter — filters by minimum star rating for climate, yield, and taste
+    if (minClimate > 0 || minYield > 0 || minTaste > 0) {
+      groups = groups
+        .map((g) => ({
+          ...g,
+          varieties: g.varieties.filter(
+            (v) =>
+              (minClimate === 0 || v.climateSuitability >= minClimate) &&
+              (minYield === 0 || v.yield >= minYield) &&
+              (minTaste === 0 || v.tastiness >= minTaste)
+          ),
+        }))
+        .filter((g) => g.varieties.length > 0);
+    }
     return groups;
-  }, [allGroups, categoryFilter, searchQuery, selectedActivities, selectedMonths, varietyMonthSets]);
+  }, [allGroups, categoryFilter, searchQuery, selectedActivities, selectedMonths, varietyMonthSets, minClimate, minYield, minTaste]);
 
   const totalVarieties = allGroups.reduce((s, g) => s + g.varieties.length, 0);
   const filteredCount = filteredGroups.reduce((s, g) => s + g.varieties.length, 0);
@@ -477,6 +500,18 @@ export function VegetableBrowserPage() {
       <div className="flex flex-col sm:flex-row gap-3">
         <FilterBar value={categoryFilter} onChange={setCategoryFilter} />
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
+      </div>
+
+      {/* Rating filters */}
+      <div className="p-2 bg-stone-50 rounded-lg border border-stone-200">
+        <RatingFilters
+          climate={minClimate}
+          onClimateChange={setMinClimate}
+          yield={minYield}
+          onYieldChange={setMinYield}
+          taste={minTaste}
+          onTasteChange={setMinTaste}
+        />
       </div>
 
       {/* Month filter */}
