@@ -87,6 +87,18 @@ import { unusualRootsGroup } from './unusualRoots';
 import { perennialVegetablesGroup } from './perennialVegetables';
 import { specialtyLegumesGroup } from './specialtyLegumes';
 
+// New vegetable types (generated from @cropgraph/core expansion 2026)
+import { agrettiGroup } from './agretti';
+import { molokhiaGroup } from './molokhia';
+import { callalooGroup } from './callaloo';
+import { snakeGourdGroup } from './snakeGourd';
+import { oysterleafGroup } from './oysterleaf';
+import { bitterMelonGroup } from './bitterMelon';
+import { chayoteGroup } from './chayote';
+import { minutinaErbastellaGroup } from './minutinaErbastella';
+import { winterMelonTongGuaGroup } from './winterMelonTongGua';
+import { luffaEdibleCylindricaGroup } from './luffaEdibleCylindrica';
+
 export const allVegetableGroups: VegetableGroup[] = [
   // Fruiting vegetables
   tomatoGroup,
@@ -167,4 +179,16 @@ export const allVegetableGroups: VegetableGroup[] = [
   unusualRootsGroup,
   perennialVegetablesGroup,
   specialtyLegumesGroup,
+
+  // New vegetable types (generated from @cropgraph/core expansion 2026)
+  agrettiGroup,
+  molokhiaGroup,
+  callalooGroup,
+  snakeGourdGroup,
+  oysterleafGroup,
+  bitterMelonGroup,
+  chayoteGroup,
+  minutinaErbastellaGroup,
+  winterMelonTongGuaGroup,
+  luffaEdibleCylindricaGroup,
 ];
